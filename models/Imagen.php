@@ -89,10 +89,19 @@ class Imagen extends EntidadBase
     {
         $con = $this->db();
         $res = $con->query("SELECT id, nombre 
-                            FROM personas
-                            WHERE idAccidente) = ".$idAccidente);
-        $res=$res->fetch_array();
-        return $res;
+                            FROM imagenes
+                            WHERE idAccidente = ".$idAccidente);
+        $i=0;
+        while ($row = $res->fetch_assoc()) {
+            $imagen = new Imagen();
+            $imagen->setNombre($row["nombre"]);
+            $imagen->setId($row["id"]);
+
+            $resultSet[$i]=$imagen;
+            $i++;
+        }
+
+        return $resultSet;
     }
 
 

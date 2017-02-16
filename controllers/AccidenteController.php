@@ -69,6 +69,8 @@ class AccidenteController
         #var_dump($accidente);
         $personas = new Persona();
         $personas = $personas->getById($accidente->getIdPersona());
+        $imagen = new Imagen();
+        $imagen = $imagen->getByAccidente($id);
         #var_dump($personas);
         include_once "views/formsAccidente/detalle.php";
         include_once ("views/templates/footer.php");

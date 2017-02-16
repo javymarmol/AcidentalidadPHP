@@ -88,6 +88,35 @@
                     </p>
                 </div>
             </div>
+            <?php if (isset($imagen)){
+                ?>
+            <div class="card">
+            <div class="card-block">
+                <h5 class="bold m-b-0">
+                    Imagenes
+                </h5>
+                <div class="row ">
+            <?php
+            foreach ($imagen as $img){
+
+                ?>
+                <div class="col-md-3 col-sm-4 col-xs-6 media-item">
+                    <a class="card card-block text-xs-center" href="javascript:;" title="caption image 1">
+                        <img class="img-fluid center-block" src="<?php echo ROOT."/images/upload/".$img->getNombre() ?>">
+                    </a>
+
+                </div>
+                    <?php
+            }
+            ?>
+                </div>
+            </div>
+            </div>
+                    <?php
+            }
+
+
+                ?>
 
 
         <div class="card-footer text-xs-right">
