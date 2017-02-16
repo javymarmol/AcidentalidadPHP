@@ -12,7 +12,7 @@
         <div class="card-header">
             <div class="card-header"><?php echo $title ?></div></div>
         <div class="card-block">
-            <form role="form" class="form-validation" method="post" action="<?php echo ROOT ?>/personas/add" enctype="multipart/form-data">
+            <form role="form" class="form-validation" method="post" action="<?php echo ROOT ?>/personas/add"">
                 <div class="form-group m-b">
                     <label>
                         Cédula

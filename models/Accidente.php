@@ -352,7 +352,10 @@ class Accidente extends EntidadBase
         $save = $con->query($this->query);
         if (!$save) {
             throw new Exception(mysqli_error($con)."[ $this->query]");
+        }else{
+            $save = mysqli_insert_id($con);
         }
+
         return $save;
     }
 

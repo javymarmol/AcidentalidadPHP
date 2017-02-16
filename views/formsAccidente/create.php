@@ -11,7 +11,7 @@
     <div class="card">
         <div class="card-header">Registrar Accidente</div>
         <div class="card-block">
-            <form role="form" class="form-validation" method="post" action="<?php echo ROOT . "/" . $modelo ?>/add">
+            <form role="form" class="form-validation" method="post" action="<?php echo ROOT . "/" . $modelo ?>/add" enctype="multipart/form-data">
                 <!-- Panel de personas-->
                 <div class="form-group m-b">
 
@@ -160,11 +160,11 @@
                     </label>
                     <div class="radio">
                         <label><input type="radio" name="incapacidad" id="incapacidad"
-                                      value="1">Si</label>
+                                      value="1" onclick="diasIncapacidad.disabled=false">Si</label>
                     </div>
 
                     <div class="radio">
-                        <label><input type="radio" name="incapacidad" id="incapacidad"
+                        <label><input type="radio" name="incapacidad" id="incapacidad"  onclick="diasIncapacidad.disabled='disabled'"
                                       value="0">No</label>
                     </div>
                 </div>
@@ -174,11 +174,17 @@
                     <label>
                         Dias de Incapacidad
                     </label>
-                    <input type="number" class="form-control valid" min="1" max="100" name="diasIncapacidad"
+                    <input type="number" class="form-control valid" min="1" max="100" name="diasIncapacidad" disabled="disabled"
                            placeholder="Dias de incapacidad" required="true" aria-required
                     >
                 </div>
-                <span class="btn btn-success btn-icon fileinput-button m-b-1"><i class="material-icons">add</i> <span>Select files...</span>  <input id="fileupload" type="file" name="files[]" multiple="multiple"> </span>
+                <span class="btn btn-success btn-icon fileinput-button m-b-1">
+                    <i class="material-icons">add</i>
+                    <span>Select files...</span>
+                    <input id="fileupload" type="file" name="files[]" multiple="multiple">
+                </span>
+                <div id="files" class="files"></div>
+                <progress id="progress" class="progress" value="0" max="100">0%</progress>
                 <div class="form-group">
                     <button class="btn btn-primary m-r" type="submit">
                         Submit

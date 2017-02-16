@@ -47,14 +47,15 @@
 
     <!-- build:js({.tmp,app}) scripts/app.min.js -->
     <script src="<?php echo ROOT ?>/js/jquery.js"></script>
+<script src="<?php echo ROOT ?>/js/core.js"></script>
+<script src="<?php echo ROOT ?>/js/tether.js"></script>
+<script src="<?php echo ROOT ?>/js/bootstrap.js"></script>
+<script src="<?php echo ROOT ?>/js/bootstrap-datepicker.js"></script>
+<script src="<?php echo ROOT ?>/js/jquery.datetimepicker.full.min.js"></script>
     <script src="<?php echo ROOT ?>/js/pace.js"></script>
-    <script src="<?php echo ROOT ?>/js/tether.js"></script>
-    <script src="<?php echo ROOT ?>/js/bootstrap.js"></script>
-    <script src="<?php echo ROOT ?>/js/bootstrap-datepicker.js"></script>
-    <script src="<?php echo ROOT ?>/js/jquery.datetimepicker.full.min.js"></script>
     <script src="<?php echo ROOT ?>/js/fastclick.js"></script>
     <script src="<?php echo ROOT ?>/js/constants.js"></script>
-    <script src="<?php echo ROOT ?>/js/main.js"></script>
+<script src="<?php echo ROOT ?>/js/main.js"></script>
     <!-- endbuild -->
 
     <!-- page scripts -->
@@ -66,14 +67,13 @@
             minDate:'<?php echo $person->fechaIngreso?>'
         });
 
-//campos formulario persona
-      //  jQuery('#fechaIngreso').datepicker();
-       // jQuery('#fechaNacimiento').datepicker();
     </script>
+
     <!-- end page scripts -->
 
     <!-- initialize page scripts -->
     <!-- end initialize page scripts -->
+
 
     </body>
 </html>

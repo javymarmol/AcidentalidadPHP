@@ -6,6 +6,7 @@
  * Time: 12:27 AM
  */
 require_once "models/Accidente.php";
+require_once "models/Imagen.php";
 require_once 'db/database.php';
 
 class AccidenteController
@@ -96,6 +97,32 @@ class AccidenteController
             $accidentes->setIdPersona($_POST["idPersona"]);
 
             if ($result = $accidentes->create()) {
+
+                if (isset($_FILES['files'])){
+
+                    $ruta = "images/upload/";
+                    $hoy = getdate();
+                    $imagen = new Imagen();
+                    $imagen->setIdAccidente($result);
+
+                    $cantidad= count($_FILES["files"]["tmp_name"]);
+                    for ($i=0; $i<$cantidad; $i++){
+                        //Comprobamos si el fichero es una imagen
+                        if ($_FILES['files']['type'][$i]=='image/png' || $_FILES['files']['type'][$i]=='image/jpeg'){
+
+                            $sufijo = md5(rand()*$hoy["seconds"]);
+                            $nombre = $sufijo."_".$_FILES["files"]["name"][$i];
+                            //Subimos el fichero al servidor
+                            move_uploaded_file($_FILES["files"]["tmp_name"][$i],$ruta.$nombre);
+                            $validar=true;
+                            $imagen->setNombre($nombre);
+                            $imagen->save();
+                        }
+                        else $validar=false;
+
+
+                    }
+                }
                 $this->index();
             } else {
                 var_dump($result);
