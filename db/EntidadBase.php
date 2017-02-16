@@ -4,17 +4,16 @@ class EntidadBase{
     private $db;
     private $conectar;
 
-    public function __construct($table, $adapter) {
+    public function __construct($table) {
         $this->table=(string) $table;
         
 		require_once 'database.php';
         $this->conectar=new DataBase();
         $this->db=$this->conectar->open_connection();
-		$this->conectar = null;
-		$this->db = $adapter;
+		//$this->conectar = null;
     }
     
-    public function getConetar(){
+    public function getConectar(){
         return $this->conectar;
     }
     

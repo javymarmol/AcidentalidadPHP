@@ -7,12 +7,12 @@
  * Time: 5:35 AM
  */
 
-require_once ("../db/EntidadBase.php");
+require_once("db/EntidadBase.php");
 
 class Persona extends EntidadBase
 {
     //Propiedades
-    protected  $id;
+    protected $id;
     public $nombre;
     public $cedula;
     public $sexo;
@@ -20,23 +20,15 @@ class Persona extends EntidadBase
     public $fechaIngreso;
     public $areaTrabajo;
     public $estado;
-
-    /*
-    function __construct($nombre,$cedula, $sexo, $correo, $fechaIngreso, $areaTrabajo)
-    {
-        $this->nombre = $nombre;
-        $this->cedula = $cedula;
-        $this->sexo = $sexo;
-        $this->correo = $correo;
-        $this->fechaIngreso = $fechaIngreso;
-        $this->areaTrabajo = $areaTrabajo;
-    }
-*/
+    public $cargo;
+    public $fechaNacimiento;
+    private $table;
 
     //Creamos el constructor
-    public function __construct($adapter) {
-        $table="personas";
-        parent::__construct($table, $adapter);
+    public function __construct()
+    {
+        $table = "personas";
+        parent::__construct($table);
     }
 
     //Getter y Setter
@@ -86,6 +78,16 @@ class Persona extends EntidadBase
         return $this->estado;
     }
 
+    public function getFechaNacimiento()
+    {
+        return $this->fechaNacimiento;
+    }
+
+    public function getCargo()
+    {
+        return $this->cargo;
+    }
+
     public function setNombre($nombre)
     {
         $this->nombre = $nombre;
@@ -111,7 +113,41 @@ class Persona extends EntidadBase
         $this->fechaIngreso = $fechaIngreso;
     }
 
-    //Getter y Setter
+    public function setCargo($cargo)
+    {
+        $this->cargo = $cargo;
+    }
+
+    public function setFechaNacimiento($fechaNacimiento)
+    {
+        $this->fechaNacimiento = $fechaNacimiento;
+    }
+
+    public function cambiaFechaAmysql($fecha)
+    {
+        ereg("([0-9]{1,2})/([0-9]{1,2})/([0-9]{2,4})", $fecha, $mifecha);
+        $lafecha = $mifecha[3] . "-" . $mifecha[1] . "-" . $mifecha[2];
+        return $lafecha;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param mixed $estado
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+    }
+
+
+//Fin Getter y Setter
 
     //Traer datos de una persona
     /*
@@ -135,19 +171,26 @@ class Persona extends EntidadBase
     //crear una nueva persona
     public function create()
     {
-        $query = "INSERT INTO personas
-                        (nombre, cedula, sexo, correo, fechaIngreso, areaTrabajo, estado)
+        $this->query = "INSERT INTO personas
+                        (nombres, cedula, sexo, fechaNacimiento, correo, fechaIngreso, areaTrabajo, cargo, estado)
                         VALUES 
                         ('" . $this->nombre . "',
                          '" . $this->cedula . "',
                          '" . $this->sexo . "',
+                         '" . $this->cambiaFechaAmysql($this->fechaNacimiento) . "',
                          '" . $this->correo . "',
-                         '" . $this->fechaIngreso . "',
+                         '" . $this->cambiaFechaAmysql($this->fechaIngreso) . "',
                          '" . $this->areaTrabajo . "',
-                         '1')";
-        $save = $this->db()->query($query);
-
-      return $save;
+                         '" . $this->cargo . "',
+                         'A')";
+        //$con = new EntidadBase($this->table);
+        $con = $this->db();
+        #$mysqli =  $con->db();
+        $save = $con->query($this->query);
+        if (!$save) {
+            throw new Exception(mysqli_error($con) . "[ $this->query]");
+        }
+        return $save;
     }
 
 
@@ -186,24 +229,80 @@ class Persona extends EntidadBase
         $this->estado = $estado;
     }
 */
-/*
+
+
     public function getAll()
     {
-        $query = "SELECT id, nombre, cedula FROM personas";
+        /*
+        $query = "SELECT id, nombres, cedula, correo, fechaNacimiento, areaTrabajo, sexo, cargo, fechaIngreso 
+                  FROM ".$this->table." 
+                  WHERE estado='A'";
+*/
+        $con = $this->db();
+        #var_dump($this->table);
 
-        $db = require_once ("../db/database.php");
-        $mysqli = $db->conectar();
-        if ($result = $mysqli->query($query)) {
-            while ($persona = $result->fetch_object('Persona')) {
-                echo $persona->info() . "\n";
-            }
+        $res = $con->query("SELECT id, nombres, cedula, correo, fechaNacimiento, areaTrabajo, sexo, cargo, fechaIngreso 
+                              FROM personas ORDER BY id ASC");
+        while ($row = $res->fetch_assoc()) {
+            $resultSet[] = $row;
         }
-        while ($row = $query->fetch_object()) {
-            $resultSet[]=$row;
-        }
-
         return $resultSet;
 
     }
-*/
+
+    public function getById($id)
+    {
+        $query = $this->db()->query("SELECT id, nombres, cedula, correo, fechaNacimiento, areaTrabajo, sexo, cargo, fechaIngreso
+                  FROM personas WHERE id=$id");
+
+        if ($row = $query->fetch_object()) {
+            #$resultSet=$row;
+            $persona = new Persona();
+            $persona->setCedula($row->cedula);
+            $persona->setCargo($row->cargo);
+            $persona->setCorreo($row->correo);
+            $persona->setNombre($row->nombres);
+            $persona->setFechaNacimiento($row->fechaNacimiento);
+            $persona->setSexo($row->sexo);
+            $persona->setAreaTrabajo($row->areaTrabajo);
+            $persona->setFechaIngreso($row->fechaIngreso);
+            $persona->setId($row->id);
+            $persona->setEstado($row->estado);
+        }
+
+
+        return $persona;
+        #return parent::getById($id); // TODO: Change the autogenerated stub
+    }
+
+    public function getAllWithAccidente()
+    {
+        $con = $this->db();
+
+        $res = $con->query("SELECT id, nombres, cedula, correo, fechaNacimiento, areaTrabajo, sexo, cargo, fechaIngreso 
+                              FROM personas
+                               WHERE id in (
+                               SELECT DISTINCT idEmpleado
+                               FROM accidentes)
+                               ORDER BY id ASC");
+        while ($row = $res->fetch_assoc()) {
+            $resultSet[] = $row;
+        }
+        return $resultSet;
+
+    }
+
+    public function countByMes($mes)
+    {
+        $con = $this->db();
+        $res = $con->query("SELECT COUNT(id) as total
+                            FROM personas
+                            WHERE month(fechaIngreso) <= ".$mes);
+        $res=$res->fetch_array();
+
+        return $res["total"];
+
+    }
+
+
 }

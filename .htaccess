@@ -1,0 +1,51 @@
+    # enable rewrite engine
+    #RewriteEngine On
+
+    # if requested url does not exist pass it as path info to index.php
+    #RewriteRule ^$ index.php?/ [QSA,L]
+    #RewriteCond %{REQUEST_FILENAME} !-f
+    #RewriteCond %{REQUEST_FILENAME} !-d
+    #RewriteRule ^(.*) /index.php [QSA,L]
+
+    # no, so we redirect to our front web controller
+    #RewriteCond %{REQUEST_FILENAME} !-f
+    #RewriteRule ^ index.php [QSA,L]
+
+    #Options +FollowSymLinks
+    #RewriteEngine On
+    #RewriteCond %{SCRIPT_FILENAME} !-f
+    #RewriteCond %{SCRIPT_FILENAME} !-d
+    # RewriteRule . /index.php [L]
+    #RewriteRule ^(.*)$ /info.php/$1 [L]
+
+
+    <IfModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteBase /PruebaIngreso/
+
+        # skip existent files
+        RewriteCond %{REQUEST_FILENAME} -f
+        RewriteRule index.php - [QSA,L,C]
+        RewriteRule .* - [QSA,L]
+
+        # deny access php files
+        RewriteCond %{REQUEST_URI} ^.*\.php$
+        RewriteRule ^.*\.php$ - [R=404,L]
+
+        # asset
+        RewriteCond %{REQUEST_URI} ^asset/*$
+        RewriteRule ^asset/*$ - [QSA,L]
+
+        # redirect root access (/) to index.php
+        RewriteCond %{REQUEST_URI} ^/$
+        RewriteRule ^$ index.php [QSA,L]
+
+        # redirect 404 for non existent files
+        RewriteCond %{REQUEST_URI} ^(.*)\..*$
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)\..*$ - [R=404,L]
+
+        # no, so we redirect to our front web controller
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteRule ^(.*)$ index.php [QSA,L]
+    </IfModule>

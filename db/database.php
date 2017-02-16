@@ -14,20 +14,32 @@ Class DataBase{
 
     function __construct()
     {
-        $db_cfg = require_once ("config.php");
-        $this->driver=$db_cfg["driver"];
-        $this->host=$db_cfg["host"];
-        $this->user=$db_cfg["user"];
-        $this->pass=$db_cfg["pass"];
-        $this->database=$db_cfg["database"];
-        $this->charset=$db_cfg["charset"];
+        $db_cfg = require_once ('db/config.php');
+        $this->driver=$db_cfg['driver'];
+        $this->host=$db_cfg['host'];
+        $this->user=$db_cfg['user'];
+        $this->pass=$db_cfg['pass'];
+        $this->database=$db_cfg['database'];
+        $this->charset=$db_cfg['charset'];
+        //var_dump($db_cfg);
     }
 
     //Conectar a la base de datos
     public function open_connection()
     {
         if($this->driver=="mysql" || $this->driver==null){
-            $con=new mysqli($this->host, $this->user, $this->pass, $this->database);
+
+            #var_dump($this->host);
+            #var_dump($this->user);
+            #var_dump($this->pass);
+            #var_dump($this->database);
+            #$con=new mysqli($this->host, $this->user, $this->pass, $this->database) or die(mysqli_connect_error());
+            $con=new mysqli("localhost", "hmarmol", "korazon03", "pruebas") or die(mysqli_connect_error());
+
+            if ($con->connect_errno) {
+                die('Connect Error: ' . $con->connect_errno);
+            }
+
             $con->query("SET NAMES '".$this->charset."'");
         }
 
